@@ -19,26 +19,26 @@ import (
 )
 
 func main() {
- cfg := cloopen.DefaultConfig().
+  cfg := cloopen.DefaultConfig().
   // 开发者主账号
   WithAPIAccount("xxxxxxxxxxxxx").
   // 主账号令牌 TOKEN
   WithAPIToken("xxxxxxxxxxxxx")
- sms := cloopen.NewJsonClient(cfg).SMS()
- // 下发包体参数
- input := &cloopen.SendRequest{
-  // 应用的APPID
-  AppId: "xxxxxxxxxxxxx",
-  // 手机号码
-		To: "00861352*******",
-  // [国内短信的]模版ID
-		TemplateId: "123456",
-  // [国外短信的]模版内容
-		Template: "[xxx]Your verification code is: {{code}}",
-  // 模版变量内容 非必填，重写了这个字段的类型由list改为了map
-		Datas: map[string]string{
-      "code": "123456"
-   },
+  sms := cloopen.NewJsonClient(cfg).SMS()
+  // 下发包体参数
+  input := &cloopen.SendRequest{
+    // 应用的APPID
+    AppId: "xxxxxxxxxxxxx",
+    // 手机号码
+    To: "00861352*******",
+    // [国内短信的]模版ID
+    TemplateId: "123456",
+    // [国外短信的]模版内容
+    Template: "[xxx]Your verification code is: {{code}}",
+    // 模版变量内容 非必填，重写了这个字段的类型由list改为了map
+    Datas: map[string]string{
+      "code": "123456",
+    },
  }
  // 下发
  resp, err := sms.Send(input)
@@ -98,3 +98,20 @@ func main() {
 - 分支说明
   - master最新稳定发布版本
   - develop待发布版本，贡献的代码请pull request到这里:)
+
+## 请求错误
+
+```json
+{
+    "statusCode":"000000",
+    "statusMsg":"成功",
+    "msgId":"0c26d83092d247b99076862f3ea24d4d",
+    "failList":[
+        {
+            "mobile": "00861352*******",
+            "errorCode": "162026",
+            "errorMsg": "当前地区未开通权限"
+        }
+    ]
+} 
+```
