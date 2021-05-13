@@ -22,7 +22,7 @@ type SendRequest struct {
 	AppId      string   `json:"appId" xml:"appId"`
 	To         string   `json:"to" xml:"to"`
 	TemplateId string   `json:"templateId" xml:"templateId"`
-	Template string   `json:"template" xml:"template"`
+	Template string     `json:"template" xml:"template"`
 	Datas      map[string]string `json:"datas" xml:"datas>key>value"`
 	international bool
 }
@@ -42,7 +42,7 @@ func (sms *SMS) Send(input *SendRequest) (*SendResponse, error) {
 	if input == nil {
 		input = &SendRequest{}
 	}
-	input.international = true
+	input.international = false
 	tos := strings.Split(input.To, ",")
 	if strings.HasPrefix(tos[0], "00") {
 		to := string(tos[0][2:])
@@ -50,6 +50,7 @@ func (sms *SMS) Send(input *SendRequest) (*SendResponse, error) {
 			input.international = true
 		}
 	}
+// 	input.international = true
 	err := input.Verify()
 	if err != nil {
 		return nil, err
@@ -135,7 +136,7 @@ func buildBody(request *request, input *SendRequest, contentType string) {
 		}
 		data = map[string]interface{}{
 			"appId" : input.AppId,
-			"templateId": input.international,
+			"templateId": input.TemplateId,
 			"datas": arguments,
 			"to": input.To,
 		}
@@ -147,4 +148,3 @@ func buildBody(request *request, input *SendRequest, contentType string) {
 	}
 	request.body = buf
 }
-
