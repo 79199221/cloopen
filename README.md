@@ -30,11 +30,15 @@ func main() {
   // 应用的APPID
   AppId: "xxxxxxxxxxxxx",
   // 手机号码
-  To: "1352*******",
-  // 模版ID
-  TemplateId: "xxxx",
-  // 模版变量内容 非必填
-  Datas: []string{"变量1","变量2","变量3"},
+		To: "00861352*******",
+  // [国内短信的]模版ID
+		TemplateId: "123456",
+  // [国外短信的]模版内容
+		Template: "[xxx]Your verification code is: {{code}}",
+  // 模版变量内容 非必填，重写了这个字段的类型由list改为了map
+		Datas: map[string]string{
+      "code": "123456"
+   },
  }
  // 下发
  resp, err := sms.Send(input)
