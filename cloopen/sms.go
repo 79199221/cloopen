@@ -19,7 +19,6 @@ func (c *Client) SMS() *SMS {
 }
 
 type SendRequest struct {
-	AppId      string   `json:"appId" xml:"appId"`
 	To         string   `json:"to" xml:"to"`
 	TemplateId string   `json:"templateId" xml:"templateId"`
 	Template string     `json:"template" xml:"template"`
@@ -72,7 +71,7 @@ func (sms *SMS) Send(input *SendRequest) (*SendResponse, error) {
 	r.params.Set(URL_PARAM_SIG, sig)
 
 
-	buildBody(r, input, sms.c.config.ContentType)
+	sms.buildBody(r, input)
 
 	resp, err := sms.c.doRequest(r)
 	if err != nil {
@@ -89,9 +88,6 @@ func (sms *SMS) Send(input *SendRequest) (*SendResponse, error) {
 }
 
 func (req *SendRequest) Verify() error {
-	if len(req.AppId) == 0 {
-		return errors.New("Miss param: appId")
-	}
 	if len(req.To) == 0 {
 		return errors.New("Miss param: to")
 	}
@@ -116,7 +112,7 @@ func getHeaderContentType(contentType string) string {
 	}
 }
 
-func buildBody(request *request, input *SendRequest, contentType string) {
+func (sms *SMS)buildBody(request *request, input *SendRequest) {
 	buf := new(bytes.Buffer)
 	var data map[string]interface{}
 	if input.international {
@@ -125,7 +121,7 @@ func buildBody(request *request, input *SendRequest, contentType string) {
 			template = strings.Replace(template, fmt.Sprintf("{{%s}}", key), value, 1)
 		}
 		data = map[string]interface{}{
-			"appId" : input.AppId,
+			"appId" : sms.c.config.AppId,
 			"content": template,
 			"mobile": input.To,
 		}
@@ -135,13 +131,13 @@ func buildBody(request *request, input *SendRequest, contentType string) {
 			arguments = append(arguments, value)
 		}
 		data = map[string]interface{}{
-			"appId" : input.AppId,
+			"appId" : sms.c.config.AppId,
 			"templateId": input.TemplateId,
 			"datas": arguments,
 			"to": input.To,
 		}
 	}
-	if contentType == CONTENT_JSON {
+	if sms.c.config.ContentType == CONTENT_JSON {
 		_ = json.NewEncoder(buf).Encode(data)
 	} else {
 		_ = xml.NewEncoder(buf).Encode(data)

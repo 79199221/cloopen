@@ -14,6 +14,7 @@ type Config struct {
 	SmsHost     string
 	APIAccount  string
 	APIToken    string
+	AppId       string
 	ContentType string
 }
 
@@ -68,6 +69,11 @@ func (c *Config) WithUseSSL(use bool) *Config {
 
 func (c *Config) WithAPIAccount(account string) *Config {
 	c.APIAccount = account
+	return c
+}
+
+func (c *Config) WithAppId(appId string) *Config {
+	c.AppId = appId
 	return c
 }
 
