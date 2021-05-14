@@ -23,12 +23,12 @@ func main() {
   // 开发者主账号
   WithAPIAccount("xxxxxxxxxxxxx").
   // 主账号令牌 TOKEN
-  WithAPIToken("xxxxxxxxxxxxx")
+  WithAPIToken("xxxxxxxxxxxxx").
+  // 应用的APPID
+  WithAppId("xxxx")
   sms := cloopen.NewJsonClient(cfg).SMS()
   // 下发包体参数
   input := &cloopen.SendRequest{
-    // 应用的APPID
-    AppId: "xxxxxxxxxxxxx",
     // 手机号码
     To: "00861352*******",
     // [国内短信的]模版ID
